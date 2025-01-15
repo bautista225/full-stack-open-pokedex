@@ -24,7 +24,7 @@ module.exports = defineConfig({
   reporter: 'html',
   /* Shared settings for all the projects below. See https://playwright.dev/docs/api/class-testoptions. */
   use: {
-    baseURL: 'http://localhost:8081/',
+    baseURL: 'http://localhost:5000/',
     /* Base URL to use in actions like `await page.goto('/')`. */
     // baseURL: 'http://127.0.0.1:3000',
 
@@ -73,7 +73,7 @@ module.exports = defineConfig({
   /* Run your local dev server before starting the tests */
   webServer: {
     command: 'npm run start',
-    url: 'http://127.0.0.1:8081',
+    url: 'http://127.0.0.1:5000',
     timeout: 120 * 1000,
     reuseExistingServer: !process.env.CI,
   },
