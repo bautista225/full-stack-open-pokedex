@@ -66,5 +66,5 @@ jobs:
         if: ${{ success() }}
         with:
           severity: info
-          details: "New version of pokedex deployed: ${{ steps.tag_release.outputs.new_tag }}"
+          details: "New version of pokedex deployed"
           webhookUrl: ${{ secrets.DISCORD_WEBHOOK }}
