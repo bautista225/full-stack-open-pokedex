@@ -34,6 +34,13 @@ jobs:
           name: playwright-report
           path: playwright-report/
           retention-days: 30
+      - name: Notify Discord - Failure
+        uses: rjstone/discord-webhook-notify@v1.0.4
+        if: ${{ failure() }}
+        with:
+          severity: error
+          details: Failed to build, lint or test pokedex. This version is not deployed.
+          webhookUrl: ${{ secrets.DISCORD_WEBHOOK }}
   
   deployment:
     if: ${{ github.event_name == 'push' && !contains(github.event.head_commit.message, '#skip') }}
@@ -54,3 +61,10 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           DEFAULT_BUMP: patch
+      - name: Notify Discord - Success
+        uses: rjstone/discord-webhook-notify@v1.0.4
+        if: ${{ success() }}
+        with:
+          severity: info
+          details: "New version of pokedex deployed: ${{ steps.tag_release.outputs.new_tag }}"
+          webhookUrl: ${{ secrets.DISCORD_WEBHOOK }}
