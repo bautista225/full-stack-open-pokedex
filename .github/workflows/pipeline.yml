@@ -9,7 +9,7 @@ on:
     types: [opened, synchronize]
 
 jobs:
-  simple_deployment_pipeline:
+  build_and_test:
     runs-on: ubuntu-20.04
     steps:
       - uses: actions/checkout@v4
@@ -34,12 +34,18 @@ jobs:
           name: playwright-report
           path: playwright-report/
           retention-days: 30
+  
+  deployment:
+    if: ${{ github.event_name == 'push' && !contains(github.event.head_commit.message, '#skip') }}
+    needs: [build_and_test]
+    runs-on: ubuntu-20.04
+    steps:
       - name: Trigger deployment
-        if: ${{ github.event_name == 'push' }}
         run: curl https://api.render.com/deploy/srv-${{ secrets.RENDER_SERVICE_ID }}?key=${{ secrets.RENDER_API_KEY }}
   
   tag_release:
-    needs: [simple_deployment_pipeline]
+    if: ${{ github.event_name == 'push' && !contains(github.event.head_commit.message, '#skip') }}
+    needs: [deployment]
     runs-on: ubuntu-20.04
     steps:
       - uses: actions/checkout@v4
